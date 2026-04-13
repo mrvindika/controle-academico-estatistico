@@ -23,7 +23,6 @@
         
         {{-- TEMPLATE & SPECIFICS STYLES --}}
         <link rel="stylesheet" href="{{ asset('assets/plugins/fontAwesome/all.min.css') }}">
-        <link rel="prefetch" href="{{ asset('assets/plugins/fontAwesome/webfonts/fa-solid-900.woff') }}" as="font" type="font/woff" crossorigin>
         <link rel="stylesheet" href="{{ asset('assets/plugins/flag-icon-css/css/flag-icon.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/plugins/sweetAlert2/animate.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/template/style.css') }}">
