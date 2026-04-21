@@ -3,32 +3,38 @@
 use App\Livewire\Forms\UserForm;
 use App\Models\User;
 
-use function Livewire\Volt\{form, state};
+use function Livewire\Volt\{computed, form, state};
 
 form(UserForm::class);
 
-state([
-    'user'=> fn(User $user)=> ['user'=>$user], 
-    'profileModal' => false,
-    'resetModal'=> false, 
-    'isDirty'=> false,
-]);
+state(['user'=> fn(User $user)=> ['user'=>$user], 'profileModal' => false, 'resetModal'=> false]);
 
-$editProfile= (function(){
-    $this->resetErrorBag();
-    $this->form->setUser($this->user);
-});
+computed(fn()=> ['user'=> $this->user]);
 
-$editPassword= (function(){
-    $this->resetErrorBag();
-});
+
+/* PROFILE */
+$editProfile= (function(){$this->resetErrorBag(); $this->form->setUser($this->user);});
 
 $updateProfile= (function(){
-    dd($this->form->validateOnlyFields(['name', 'role','email', 'phone']));
+    $validated= $this->form->validateOnlyFields(['name', 'role','email', 'phone']);
+
+    $this->user->update($validated);
+
+    $this->profileModal= false;
+
+    $this->dispatch('swal:alert', message: 'Perfil atualizado com sucesso.');
 });
 
+/* PASSWORD */
+$editPassword= fn()=> $this->resetErrorBag();
+
 $updatePassword=  (function(){
-   dd($this->form->validateOnlyFields(['current_password', 'password', 'password_confirmation']));
+    $validated= $this->form->validateOnlyFields(['current_password', 'password', 'password_confirmation']);
+    $this->user->update($validated);
+
+    $this->resetModal= false;
+
+    $this->dispatch('swal:alert', message: 'Senha redefinida com sucesso.');
 });
 
 
@@ -63,13 +69,11 @@ $updatePassword=  (function(){
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-form-label text-primary text-center">
-                                <i class="fa fa-at"></i>
                                 {{ $user->email }} 
 
                                 @if($user->phone)
-                                    <span class="text-muted"> <i class="fa fa-shield" aria-hidden="true"></i> </span>
-                                    <i class="fa fa-phone"></i> +244 
-                                    {{ $user->phone }}  
+                                    <label class="text-muted"> <i class="fa fa-shield" aria-hidden="true"></i> </label>
+                                    | +244{{ $user->phone }}  
                                 @endif
                             </div>
                         </div>
@@ -98,44 +102,44 @@ $updatePassword=  (function(){
                                                             <label for="name">{{ __('Nome') }}</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                                    <label for="name" class="input-group-text"><i class="fas fa-user"></i></label>
                                                                 </div>
-                                                                <input type="text" id="name"  wire:model.live.blur="form.name"  class="form-control @error('form.name') is-invalid @enderror" placeholder="Nome" aria-label="Nome">
-                                                                @error('form.name') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                <input type="text" id="name"  wire:model.live.blur="form.name"  class="form-control @error('form.name') is-invalid @enderror" placeholder="Nome">
+                                                                @error('form.name') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="role">{{ __('Previlégio') }}</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fas fa-user-cog"></i></span>
+                                                                    <label for="role" class="input-group-text"><i class="fas fa-user-cog"></i></label>
                                                                 </div>
                                                                 <select id="role"  wire:model.live.blur="form.role" class="form-control @error('form.role') is-invalid @enderror" autocomplete="off">
                                                                     <option value="">-- {{__('Selecione')}} --</option>
                                                                     <option value="Operador">Operador</option>
                                                                     <option value="Administrador">Administrador</option>
                                                                 </select>
-                                                                @error('form.role') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                @error('form.role') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="email">{{ __('Email') }}</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fas fa-at"></i></span>
+                                                                    <label for="email" class="input-group-text"><i class="fas fa-at"></i></label>
                                                                 </div>
-                                                                <input type="email" id="email"  wire:model.live.blur="form.email"  class="form-control @error('form.email') is-invalid @enderror" placeholder="Email" aria-label="Email">
-                                                                @error('form.email') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                <input type="email" id="email"  wire:model.live.blur="form.email"  class="form-control @error('form.email') is-invalid @enderror" placeholder="Email">
+                                                                @error('form.email') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="phone">{{ __('Telemovel') }}</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                                    <label for="phone" class="input-group-text"><i class="fas fa-phone"></i></label>
                                                                 </div>
-                                                                <input type="text" id="phone"  wire:model.live.blur="form.phone"  class="form-control @error('form.phone') is-invalid @enderror" placeholder="Telemovel" aria-label="Telemovel">
-                                                                @error('form.phone') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                <input type="text" id="phone"  wire:model.live.blur="form.phone"  class="form-control @error('form.phone') is-invalid @enderror" placeholder="Telemovel">
+                                                                @error('form.phone') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                             </div>
                                                         </div>
                                                     </div>
@@ -145,10 +149,10 @@ $updatePassword=  (function(){
                                                                 {{__('Fechar')}}
                                                         </button>
                                                         <button type="submit" class="btn btn-success btn-rounded btn-confirm">
-                                                            <span class="spinner-border spinner-border-sm">
+                                                            <label class="spinner-border spinner-border-sm">
                                                                 <i class="fa fa-save" aria-hidden="true"></i>
-                                                            </span>
-                                                            <span>{{__('Atualizar')}} </span>
+                                                            </label>
+                                                            <label>{{__('Atualizar')}} </label>
                                                         </button>
                                                     </div>
                                                 </form>
@@ -181,11 +185,11 @@ $updatePassword=  (function(){
                                                                 <label for="current_password">{{ __('Senha actual') }}</label>
                                                                 <div class="input-group">
                                                                     <div class="input-group-prepend">
-                                                                        <span class="input-group-text"><i class="fa fa-eye-slash"></i></span>
+                                                                        <label for="current_password" class="input-group-text"><i class="fa fa-eye-slash"></i></label>
                                                                     </div>
                                                                     <x-includes.faker/>
-                                                                    <input type="password" id="current_password" autocomplete="off"  wire:model.live.blur="form.current_password"  class="form-control @error('form.current_password') is-invalid @enderror" placeholder="Senha actual" aria-label="Senha actual" autofocus>
-                                                                    @error("form.current_password") <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                    <input type="password" id="current_password" autocomplete="off"  wire:model.live.blur="form.current_password"  class="form-control @error('form.current_password') is-invalid @enderror" placeholder="Senha actual" autofocus>
+                                                                    @error("form.current_password") <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -193,20 +197,20 @@ $updatePassword=  (function(){
                                                             <label for="password">{{ __('Nova senha') }}</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fa fa-eye-slash"></i></span>
+                                                                    <label for="password" class="input-group-text"><i class="fa fa-eye-slash"></i></label>
                                                                 </div>
-                                                                <input type="password" id="password"  wire:model.live.blur="form.password"  class="form-control @error('form.password') is-invalid @enderror" placeholder="Nova senha" aria-label="Nova senha">
-                                                                @error('form.password') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                <input type="password" id="password"  wire:model.live.blur="form.password"  class="form-control @error('form.password') is-invalid @enderror" placeholder="Nova senha">
+                                                                @error('form.password') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="password_confirmation">{{ __('Confirmar nova senha') }}</label>
+                                                            <label for="password_confirmation">{{ __('Senha de confirmação') }}</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fa fa-eye-slash"></i></span>
+                                                                    <label for="password_confirmation" class="input-group-text"><i class="fa fa-eye-slash"></i></label>
                                                                 </div>
-                                                                <input type="password" id="password_confirmation" wire:model.live.blur="form.password_confirmation" class="form-control @error('form.password_confirmation') is-invalid @enderror" placeholder="Confirmar nova senha" aria-label="Confirmar nova senha">
-                                                                @error('form.password_confirmation') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                                                                <input type="password" id="password_confirmation" wire:model.live.blur="form.password_confirmation" class="form-control @error('form.password_confirmation') is-invalid @enderror" placeholder="Senha de confirmação" de confirmação">
+                                                                @error('form.password_confirmation') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                                                             </div>
                                                         </div>
                                                     </div>

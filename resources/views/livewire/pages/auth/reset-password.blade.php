@@ -23,8 +23,8 @@ state([
 
 rules([
     'token' => ['required'],
-    'email' => ['required', 'string', 'email'],
-    'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+    'email' => ['bail','required', 'string', 'email'],
+    'password' => ['bail','required', 'string', 'confirmed', 'min:6'],
 ]);
 
 $resetPassword = function () {

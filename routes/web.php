@@ -15,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Users
     Route::group(['prefix'=> 'settings'], function(){
         Volt::route('users', 'pages.users.index')->name('users.index'); 
+        Volt::route('users/create', 'pages.users.create')->name('users.create'); 
         Volt::route('users/{user}', 'pages.users.show')->name('users.show'); 
     });
 

@@ -1,6 +1,23 @@
 <?php
 
 use App\Livewire\Actions\Logout;
+use App\Traits\AppendTrait;
+use Illuminate\Support\Facades\Auth;
+
+use function Livewire\Volt\{boot, uses};
+
+uses(AppendTrait::class);
+
+boot(function(){
+    if(session()->has('welcome'))
+    {
+        $this->dispatch('swal:alert', 
+            icon: 'info',
+            title: 'Parabéns!',
+            message: 'Seja bem-vindo caro '. Auth::user()->role,
+        );
+    }
+});
 
 $logout= (function(Logout $logout){
     $logout();
@@ -16,7 +33,7 @@ $logout= (function(Logout $logout){
             <img src="{{ asset('images/avatar.png') }}" alt="Avatar"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-            <a wire:navigate class="dropdown-item" href="{{ route('users.show', Auth::user()) }}">
+            <a class="dropdown-item" href="{{ route('users.show', Auth::user()) }}">
                 <i class="fas fa-user-lock text-primary"></i>
                 {{ __('Perfil') }}
             </a>

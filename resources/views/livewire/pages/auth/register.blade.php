@@ -15,11 +15,12 @@ $register = function () {
 
     Auth::login($user);
 
-    return $this->redirect(route('dashboard', absolute: false), navigate: true); 
+    return $this->redirect(route('dashboard', absolute: false), navigate: false); 
 };
 
 ?>
 
+{{-- REGISTER USER  ADMIN #DIV --}}
 <div class="col-md-5 mx-auto">
     {{-- TITLE --}}
     <x-slot name="title"> {{ __('Usuário | Administrador') }} </x-slot>

@@ -54,16 +54,6 @@
                                 <h3 class="page-title"> 
                                     {{ $title?? 'Testing Page'}}
                                 </h3>
-                                
-                                {{-- NOTIFICATION ALERT --}}
-                                <nav aria-label="breadcrumb">
-                                    @if (session('alert'))
-                                        <div class="alert alert-fill-{{ session('alert.bg')}}" role="alert">
-                                            <i class="fa fa-bell"></i>
-                                            {!! session('alert.msg') !!}
-                                        </div>
-                                    @endif
-                                </nav>
                             </div>
                             {{ $slot->isEmpty()? __('No main component'): $slot }}
                         </div>

@@ -1,10 +1,9 @@
 <?php
 
 use App\Livewire\Forms\LoginForm;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use function Livewire\Volt\{form};
-
-
 
 form(LoginForm::class);
 
@@ -14,9 +13,12 @@ $login = function () {
     $this->form->authenticate();
 
     Session::regenerate();
+    
+    session()->flash('welcome');
 
     return $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
 };
+
 
 ?>
 

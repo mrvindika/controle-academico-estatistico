@@ -23079,10 +23079,8 @@ select.border-dark.tt-hint {
 }
 
 .form-group label {
-  font-size: 0.8125rem;
-  line-height: 1;
-  vertical-align: top;
-  margin-bottom: .5rem;
+	line-height: 1;
+	vertical-align: top;
 }
 
 .form-group.has-danger .form-control, .form-group.has-danger .asColorPicker-input, .form-group.has-danger .dataTables_wrapper select, .dataTables_wrapper .form-group.has-danger select, .form-group.has-danger .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row .form-group.has-danger input[type=text], .form-group.has-danger

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 
 trait AppendTrait
 {
@@ -102,6 +103,15 @@ trait AppendTrait
         }
 
         return $filtered;
+    }
+
+    /**
+    * Check weather given route name is last page user had visited
+    * @return bool
+    */
+    public static function isLastRoute(string $routeName){
+        
+        return Route::getRoutes()->match(request()->create(url()->previous()))->getName() === $routeName;
     }
 
 
