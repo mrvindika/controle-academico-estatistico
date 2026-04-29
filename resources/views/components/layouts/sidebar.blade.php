@@ -29,6 +29,7 @@
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="">{{__('Instituição')}}</a></li>
                 <li class="nav-item"> <a class="nav-link" href="">{{__('Bem-vindo')}}</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">{{__('Modelos')}}</a></li>
               </ul>
             </div>
           </li>

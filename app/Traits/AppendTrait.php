@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 trait AppendTrait
 {
@@ -113,6 +114,93 @@ trait AppendTrait
         
         return Route::getRoutes()->match(request()->create(url()->previous()))->getName() === $routeName;
     }
+
+    /**
+    * Check weather given route name is last page user had visited
+    * @return array
+    */
+    public static function rename(array $names):array
+    {
+        $result= [];
+        foreach ($names as $name)
+           array_push($result, preg_replace('/_/', ' ', $name));
+        
+        return $result;
+    }
+
+    /**
+     * Returns  array of customized attributes
+     * @return string
+    */
+    public static function letter(int $index){
+
+        $result= [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K','L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        ];
+
+        return $result[$index];
+
+    }
+
+    /**
+     * Returns  array of customized attributes
+     * @return mixed
+    */
+    public function importModel (object $importModel) 
+    {
+        $this->validate(['file' => 'required|mimes:xlsx,xls,csv']);
+
+        $import = new $importModel;
+        Excel::import($import, $this->file);
+        $failed = $import->failures()->count();
+
+        if($failed > 0) {
+            $failuresData= $import->failures()->map(function ($failure) {
+                $value = $failure->values();
+                $data= [];
+
+                foreach ($this->fields as $field) array_push($data, ($value[$field]?? ''));
+
+                array_push($data, implode(', ', $failure->errors()));
+                
+                return $data;
+            })->toArray();
+
+            $this->file = null;
+
+            return ['data'=>$failuresData, 'failures'=> $failed];
+        }
+
+        $this->file = null;
+        $this->importModal= false;
+
+        return null;
+    }
+
+    /**
+     * Returns  array of customized attributes
+     * @return void
+    */
+    public function importMessage (string $modelName= 'registro', int $failures=0) 
+    {
+        if($failures > 0){
+            $this->dispatch('swal:alert', 
+                icon: 'warning',
+                title: 'Importado(s) com erro(s)!',
+                message: "Corrija os erros de $failures $modelName(s) no ficheiro gerado.",
+            );
+        }
+        else{
+            $this->dispatch('swal:alert', 
+                icon: 'success',
+                title: 'Sucesso!',
+                text: "Todos $modelName(s) importado(s) com sucesso.",
+            );
+        }
+    }
+
+
 
 
 

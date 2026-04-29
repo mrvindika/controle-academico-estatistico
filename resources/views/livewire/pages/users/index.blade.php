@@ -2,24 +2,37 @@
 
 use App\Models\User;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
+use App\Traits\AppendTrait;
+use App\Exports\FailedModelExport;
+use App\Exports\ModelTemplateExport;
 
-use function Livewire\Volt\{boot, computed, on, state, uses};
-state([
-    'search'=> ''
-]);
+use function Livewire\Volt\{boot, computed, on, state, uses, usesFileUploads};
+uses([WithPagination::class, AppendTrait::class]); usesFileUploads();
 
-uses([WithPagination::class]);
+state(['importModal' => false, 'file' => null, 'message' => '', 'fields'=> []]);
+state(['search'=> ''])->url(except: '');
 
-$users= computed(fn()=> User::latest()->paginate(3));
+$users= computed(function(){ 
+    return User::query()->when($this->search, fn($query)=> 
+        $query->where('name','like', "%{$this->search}%")
+            ->orWhere('email','like', "%{$this->search}%")
+            ->orWhere('role','like', "%{$this->search}%")
+    )->latest()->paginate(2);
+});
 
 boot(function(){
     if(session()->has('userCreated'))
-        $this->dispatch('swal:alert', message: 'Usuário cadastrado com sucesso.');
+        $this->dispatch('swal:alert', 
+        message: 'Usuário cadastrado com sucesso.'
+    );
+
+    $this->fields= array_keys((new UsersImport())->rules());
 });
 
 on(['deleteConfirmed' => function (int $id){
     $user= User::find($id);
-
     $user->delete();
 
     $this->dispatch('swal:alert', 
@@ -40,6 +53,17 @@ $delete= function(mixed $id){
     }
 };
 
+$downloadTemplate= fn()=> Excel::download(new ModelTemplateExport($this->fields), 'modelo_importar_usuarios.xlsx');
+
+$importThis = function (UsersImport $importModel) {
+    $imported= $this->importModel($importModel);
+
+    if($imported){
+        $this->importMessage('usuário', $imported['failures']);
+        return Excel::download(new FailedModelExport($imported['data'], $this->fields), ('usuarios_a_corrigir_' .now()->format('His') .'.xlsx'));
+    }
+    else $this->importMessage('usuário');
+};
 
 ?>
 
@@ -57,7 +81,7 @@ $delete= function(mixed $id){
                         <div class="input-group-prepend">
                             <label for="search" class="input-group-text"><i class="fa fa-search"></i></label>
                         </div>
-                        <input type="search" id="search"  wire:model.live.blur="form.search"  placeholder="Procurar..." class="form-control">
+                        <input type="search" id="search"  wire:model.live="search"  placeholder="Procurar..." class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
@@ -65,6 +89,9 @@ $delete= function(mixed $id){
                         <i class="fas fa-plus"></i> {{__('Adicionar')}}
                     </a>
                 </div>
+                
+                {{-- IMPORT COLLECTION OF USER #MODAL --}}
+                <x-includes.import-modal description="Importar Usuários" />
             </div>
             <h4 class="page-title text-center text-danger">{{ __('Lista de Usuários') }}</h4>
         </div>
