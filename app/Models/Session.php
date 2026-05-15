@@ -5,28 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Agent\Agent;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
 
+#[Guarded(['id'])]
+#[Appends([
+    'platform', 'browser', 'device', 'platform_icon','agent', 
+    'minutes', 'activity', 'browser_icon', 'device_icon'
+])]
 class Session extends Model
 {
-
-    /**
-     * The attribute that is auto-increment.
-     */
-    protected $guarded = ['id'];
-
     /**
      * The attribute that is ID.
      */
     protected $keyType= 'string';
-
-    /**
-     * The additional attributes.
-     */
-    protected  $appends= [
-        'platform', 'browser', 'device', 'platform_icon',
-        'agent', 'minutes', 'activity', 'browser_icon', 
-        'device_icon'
-    ];
 
     /**
      * Avoid timestamps attributes.
@@ -41,7 +33,7 @@ class Session extends Model
     /*----------------------------------------------------------------------------------------------------------------
     | RELATIONSHIPS
     |----------------------------------------------------------------------------------------------------------------*/
-    /* Each Session belongs to [1]User */
+    /* Get the user */
     public function user()
     {
         return $this->belongsTo(User::class);

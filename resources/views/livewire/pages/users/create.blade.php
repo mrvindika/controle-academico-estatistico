@@ -20,6 +20,7 @@ $register = function () {
     return $this->redirect(route('users.index', absolute: false), navigate: false); 
 };
 
+
 ?>
 
 {{-- CREATE USER #FORM --}}

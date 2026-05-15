@@ -11,19 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', 
-                ['Administrador', 'Director', 'Técnico', 'Operador'])
-                ->default('Administrador')
-                ->after('name');
+        Schema::create('academic_years', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+
+            //CONSTRAINTS
+            $table->foreignId('school_id')
+            ->constrained()
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
-    /**s
+    /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropColumns('users', ['role']);
+        Schema::dropIfExists('academic_years');
     }
 };

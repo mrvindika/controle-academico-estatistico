@@ -6,15 +6,16 @@ namespace App\Models;
 use App\Traits\AppendTrait;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Appends;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
-#[Fillable(['name', 'role', 'email','phone', 'password'])]
+
 #[Hidden(['password', 'remember_token'])]
+#[Guarded(['id', 'created_at', 'updated_at'])]
 #[Appends(['firstname', 'surname', 'fullname', 'online', 'last_session',])]
 class User extends Authenticatable
 {
@@ -39,10 +40,16 @@ class User extends Authenticatable
     /*----------------------------------------------------------------------------------------------------------------
     | RELATIONSHIPS
     |----------------------------------------------------------------------------------------------------------------*/
-    /* Each User may have [*] Session */
+    /* Get collection of sessions  */
     public function sessions()
     {
         return $this->hasMany(Session::class);
+    }
+
+    /* Get useable model  */
+    public function useable()
+    {
+        return $this->morphTo();
     }
 
     /*----------------------------------------------------------------------------------------------------------------

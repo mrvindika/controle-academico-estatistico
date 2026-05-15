@@ -12,18 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', 
-                ['Administrador', 'Director', 'Técnico', 'Operador'])
-                ->default('Administrador')
-                ->after('name');
+            $table->integer('useable_id')->nullable()->after('must_change_password');
         });
     }
 
-    /**s
+    /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropColumns('users', ['role']);
+        Schema::table('users', function (Blueprint $table) {
+            Schema::dropColumns('users', ['useable_id']);
+        });
     }
 };

@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('must_change_password')
-            ->default(false)
-            ->after('password');
+        Schema::create('transferreds', function (Blueprint $table) {
+            //CONSTRAINTS
+            $table->foreignId('statistic_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+                
+            $table->primary('statistic_id');
         });
     }
 
@@ -23,8 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            Schema::dropColumns('users', ['must_change_password']);
-        });
+        Schema::dropIfExists('transferreds');
     }
 };

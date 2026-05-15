@@ -11,19 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', 
-                ['Administrador', 'Director', 'Técnico', 'Operador'])
-                ->default('Administrador')
-                ->after('name');
+        Schema::create('succeeds', function (Blueprint $table) {
+            //CONSTRAINTS
+            $table->foreignId('statistic_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+                
+            $table->primary('statistic_id');
         });
     }
 
-    /**s
+    /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropColumns('users', ['role']);
+        Schema::dropIfExists('succeeds');
     }
 };

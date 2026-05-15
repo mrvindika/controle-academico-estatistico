@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', 
-                ['Administrador', 'Director', 'Técnico', 'Operador'])
-                ->default('Administrador')
-                ->after('name');
+        Schema::create('departments', function (Blueprint $table) {
+            $table->id('id');
+            $table->string('name');
+            $table->string('banner')->nullable();
         });
     }
 
-    /**s
+    /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropColumns('users', ['role']);
+        Schema::dropIfExists('departments');
     }
 };
