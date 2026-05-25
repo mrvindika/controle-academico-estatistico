@@ -26,14 +26,19 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFai
     */
     public function model(array $row)
     {
-        return new User([
-            'name'     => $row['nome_completo'],
-            'role'    => $row['privilegio']?? 'Operador',
-            'email'    => $row['email'],
-            'phone'    => $row['telemovel'],
-            'password' => Hash::make('12345678'),
+        $user= new User([
+            'name'=> $row['nome_completo'],
+            'role'=> $row['privilegio']?? 'Operador',
+            'password'=> Hash::make('dme'),
             'must_change_password' => true,
         ]);
+
+        $user->contact()->update([
+            'email'=> $row['email'],
+            'phone'=> $row['telemovel'],
+        ]);
+        
+        return $user;
     }
 
     public function rules(): array
@@ -46,9 +51,9 @@ class UsersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFai
 
         return [
             'nome_completo'=> $fieldRules['name'],
-            'privilegio'=>['bail', 'nullable', 'in:Operador,Administrador'],
+            'privilegio'=>['nullable', 'in:Operador,Administrador'],
             'email'=> $fieldRules['email'],
-            'telemovel'=> ['bail', 'nullable', 'numeric','digits:9', Rule::unique('users', 'phone')],
+            'telemovel'=> ['nullable', 'phone', Rule::unique('contacts', 'phone')],
         ];
     }
 

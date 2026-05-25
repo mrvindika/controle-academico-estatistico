@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('town')->default('Cubal');
             $table->string('district')->default('Cubal');
             $table->string('quarter')->nullable();
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('coordinates')->nullable();
             
             //CONSTRAINTS
-            $table->integer('locatable_id');
             $table->string('locatable_type');
+            $table->unsignedInteger('locatable_id');
         });
     }
 

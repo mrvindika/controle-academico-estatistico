@@ -11,6 +11,42 @@ trait AppendTrait
 {
 
     /**
+    * Returns phone 
+    * @param string $string
+    * @return  string
+    */
+    public static function phone(string $string)
+    {
+        // Remove all characters different of digits and +.
+        $phone= preg_replace('/[^0-9+]/','', $string);
+
+        return $phone;
+    }
+
+        /**
+    * Returns phone 
+    * @param string $string
+    * @return  bool
+    */
+    public static function phoneNumber(string $string)
+    {
+        return (bool) preg_match('/^\+?[0-9]+$/', $string);
+    }
+
+    /**
+    * Returns phone number without country code
+    * @param string $string
+    * @return  string
+    */
+    public static function remove244(string $string)
+    {
+        // Remove all characters different of digits and +.
+        $phone= preg_replace('/^\+?244/','', $string);
+
+        return $phone;
+    }
+
+    /**
     * Delete any file from specific filePath
     * @param string $filePath
     * @return  void

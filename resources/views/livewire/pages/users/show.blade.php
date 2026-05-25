@@ -16,9 +16,13 @@ computed(fn()=> ['user'=> $this->user]);
 $editProfile= (function(){$this->resetErrorBag(); $this->form->setUser($this->user);});
 
 $updateProfile= (function(){
-    $validated= $this->form->validateOnlyFields(['name', 'role','email', 'phone']);
+    $validatedUser= $this->form->validateOnlyFields(['name', 'role']);
 
-    $this->user->update($validated);
+    $validatedContact= $this->form->validateOnlyFields(['email', 'phone']);
+
+    $this->user->update($validatedUser);
+    
+    $this->user->contact()->update($validatedContact);
 
     $this->profileModal= false;
 
@@ -69,11 +73,11 @@ $updatePassword=  (function(){
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-form-label text-primary text-center">
-                                {{ $user->email }} 
+                                {{ $user->contact->email }} 
 
-                                @if($user->phone)
+                                @if($user->contact->phone)
                                     <label class="text-muted"> <i class="fa fa-shield" aria-hidden="true"></i> </label>
-                                    | +244{{ $user->phone }}  
+                                    | {{ $user->contact->phone }}  
                                 @endif
                             </div>
                         </div>

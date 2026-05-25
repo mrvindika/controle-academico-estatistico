@@ -118,6 +118,7 @@ return [
         'symbols'       => ':attribute deve ter símbolo.',
         'uncompromised' => ':attribute viola os dados. Escolha outro valor.',
     ],
+    'phone'                => ':attribute não é telemovel válido em Angola.',
     'present'                => ':attribute deve estar presente.',
     'present_if'             => ':attribute deve estar presente quando :other for :value.',
     'present_unless'         => ':attribute deve estar presente, a menos que :other seja :value.',

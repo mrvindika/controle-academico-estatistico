@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Contact;
 use Illuminate\Validation\Rule;
 
 trait UserRules
@@ -12,21 +13,19 @@ trait UserRules
     */
     public function getUserRules():array
     {
-        $userId = isset($this->user->id)? $this->user->id : null;
-
+        $contactId= isset($this->user)? $this->user->contact->id: null;
+        
         return [
-            'name'  => ['bail','filled', 'string', 'max:160', 'min:2'],
-            'role'  => ['bail', 'required', 'in:Operador,Administrador'],
-            'email' => ['bail','filled', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
-            'phone' => ['bail','nullable', 'numeric', 'digits:9', Rule::unique('users')->ignore($userId)],
-            'password' => ['bail', 'required', 'string','confirmed','min:6'],
-            'current_password' => ['bail','required', 'current_password'],
+            'name'  => ['filled', 'string', 'max:160', 'min:2'],
+            'role'  => [ 'in:Operador,Administrador'],
+            'phone' => ['nullable', 'phone', Rule::unique('contacts')->ignore($contactId)],
+            'email' => ['required_without:phone','nullable', 'email', 'max:255', Rule::unique('contacts')->ignore($contactId)],
+            'password' => [ 'required', 'string','confirmed','min:4'],
+            'current_password' => ['required', 'current_password'],
             'password_confirmation' => ['required'],
             'remember' => ['boolean'],
         ];
     }
-
-
 
 
 }

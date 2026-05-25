@@ -16,7 +16,7 @@ class ModelActions
     */
     public function importModel (object $importModel) 
     {
-        $this->validate(['file' => 'required|mimes:xlsx,xls,csv']);
+        $this->validate(['file' => 'required|mimes:xlsx,xls,xlsm,csv']);
         $import = new $importModel;
         Excel::import($import, $this->file);
         $failed = $import->failures()->count();

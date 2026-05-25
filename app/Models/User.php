@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\AppendTrait;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Appends;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 #[Hidden(['password', 'remember_token'])]
 #[Guarded(['id', 'created_at', 'updated_at'])]
 #[Appends(['firstname', 'surname', 'fullname', 'online', 'last_session',])]
-class User extends Authenticatable
+class User extends Authenticatable 
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -40,16 +39,22 @@ class User extends Authenticatable
     /*----------------------------------------------------------------------------------------------------------------
     | RELATIONSHIPS
     |----------------------------------------------------------------------------------------------------------------*/
-    /* Get collection of sessions  */
+    /* Get collection of sessions */
     public function sessions()
     {
         return $this->hasMany(Session::class);
     }
 
-    /* Get useable model  */
+    /* Get useable model */
     public function useable()
     {
         return $this->morphTo();
+    }
+
+    /* Get contact model */
+    public function contact()
+    {
+        return $this->morphOne(Contact::class, 'contactable');
     }
 
     /*----------------------------------------------------------------------------------------------------------------

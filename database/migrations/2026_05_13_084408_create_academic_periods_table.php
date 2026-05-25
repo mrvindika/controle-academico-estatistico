@@ -12,17 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('academic_periods', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->enum('name', ['I trimestre', 'II trimestre', 'III trimestre']);
             $table->date('start_date')->nullable;
             $table->date('end_date')->nullable();
             $table->timestamps();
 
             //CONSTRAINTS
-            $table->foreignId('academic_year_id')
-            ->constrained()
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->unsignedInteger('academic_year_id')
+                ->foreign()
+                ->references('id')
+                ->on('academic_years')
+                ->onDelete('cascade');
         });
     }
 

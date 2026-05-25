@@ -15,11 +15,15 @@ state(['importModal' => false, 'file' => null, 'message' => '', 'fields'=> []]);
 state(['search'=> ''])->url(except: '');
 
 $users= computed(function(){ 
-    return User::query()->when($this->search, fn($query)=> 
-        $query->where('name','like', "%{$this->search}%")
-            ->orWhere('email','like', "%{$this->search}%")
-            ->orWhere('role','like', "%{$this->search}%")
-    )->latest()->paginate(2);
+    $searched= "%{$this->search}%"; 
+
+    return User::query()
+        ->where('name','like', $searched)
+        ->orWhere('role','like', $searched)
+        ->orWhereHas('contact', function ($query) use($searched){
+            $query->Where('email','like', $searched)
+            ->orWhere('phone','like', $searched);    
+    })->latest()->paginate(5); 
 });
 
 boot(function(){
@@ -113,7 +117,7 @@ $importThis = function (UsersImport $importModel) {
                         <tr>
                             <td class="text-center">{{$loop->iteration}}</td>
                             <td>{{$user->name}}</td>
-                            <td>{{$user->email}}</td>
+                            <td>{{$user->contact->email}}</td>
                             <td class="text-center">{{$user->role}}</td>
                             <td class="text-center">
                                 <i class="fa fa-circle text-{{$user->online? 'success': 'danger'}}"></i>

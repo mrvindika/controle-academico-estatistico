@@ -12,15 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('managers', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('name');
             $table->string('role', );
             $table->string('license')->nullable();
 
             //CONSTRAINTS
-            $table->integer('manageable_id');
             $table->string('manageable_type');
-
+            $table->unsignedInteger('manageable_id');
         });
     }
 

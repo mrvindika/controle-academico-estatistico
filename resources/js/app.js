@@ -43,7 +43,7 @@ window.addEventListener('swal:alert', event => {
 window.addEventListener('swal:confirm-delete', event => {
     Swal.fire({
         title: event.detail.title || 'Tens certeza?',
-        text: event.detail.message || "Esta ação não pode ser revertida!",
+        text: event.detail.message || "Esta ação não pode ser revertida.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#fc2d41', 

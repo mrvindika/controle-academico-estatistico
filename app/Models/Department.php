@@ -46,4 +46,11 @@ class Department extends Model
     {
         return $this->morphMany(Manager::class, 'manageable');
     }
+
+    /* Get contact model */
+    public function contact()
+    {
+        return $this->morphOne(Contact::class, 'contactable');
+    }
+
 }

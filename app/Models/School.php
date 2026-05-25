@@ -43,6 +43,13 @@ class School extends Model
         return $this->hasMany(AcademicYear::class);
     }
 
+    /* Get contact model */
+    public function contact()
+    {
+        return $this->morphOne(Contact::class, 'contactable');
+    }
+
+
 
 
 }

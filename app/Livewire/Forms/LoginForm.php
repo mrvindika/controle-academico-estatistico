@@ -2,23 +2,19 @@
 
 namespace App\Livewire\Forms;
 
+use App\Models\Contact;
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 class LoginForm extends Form
 {
-    #[Validate('required|string|email')]
-    public string $email = '';
-
-    #[Validate('required|string')]
+    public string $username = '';
     public string $password = '';
-
-    #[Validate('boolean')]
     public bool $remember = false;
 
     /**
@@ -30,11 +26,14 @@ class LoginForm extends Form
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+        $contact= Contact::where($this->getColumn(), $this->username)->where('contactable_type', User::class)->first();
+        $user= $contact? $contact->contactable: null;
+
+        if(!$user || !Auth::attempt(['id' => $user->id, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'form.email' => trans('auth.failed'),
+                'form.username' => trans('auth.failed'),
             ]);
         }
 
@@ -55,7 +54,7 @@ class LoginForm extends Form
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'form.email' => trans('auth.throttle', [
+            'form.username' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -67,6 +66,28 @@ class LoginForm extends Form
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->username).'|'.request()->ip());
+    }
+
+    /**
+     * Get the authentication rate limiting throttle key.
+     */
+    protected function getColumn(): string
+    {
+        $phone=(bool) preg_match('/^\+?[0-9]+$/', $this->username);
+   
+        return $phone? 'phone': 'email';
+    }
+
+    /**
+     * Get the authentication rate limiting throttle key.
+     */
+    protected function rules(): array
+    {
+       return [
+            'username'=> "filled|string|{$this->getColumn()}",
+            'password'=> 'required|string',
+            'remember'=> 'boolean',
+       ];
     }
 }

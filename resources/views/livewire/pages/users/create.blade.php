@@ -8,10 +8,12 @@ use function Livewire\Volt\{form};
 form(UserForm::class);
 
 
-$register = function () {
-    $validated= $this->form->validateOnlyFields(['name', 'role','email', 'phone', 'password', 'password_confirmation']);
-
-    $user = User::create($validated);
+$register = function () {    
+    $validatedUser= $this->form->validateOnlyFields(['name','password', 'password_confirmation']);
+    $validatedContact= $this->form->validateOnlyFields(['email', 'phone']);
+    
+    $user = User::create($validatedUser);
+    $user->contact()->create($validatedContact);
 
     event(new Registered($user));
 
@@ -42,7 +44,7 @@ $register = function () {
                         <div class="input-group-prepend">
                             <label class="input-group-text"><i class="fas fa-user"></i></label>
                         </div>
-                        <input type="text" id="name"  wire:model.live.blur="form.name"  class="form-control @error('form.name') is-invalid @enderror" placeholder="Nome">
+                        <input type="text" id="name"  wire:model.live.blur="form.name"  class="form-control @error('form.name') is-invalid @enderror" placeholder="Nome" autofocus>
                         @error('form.name') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
                     </div>
                 </div>
@@ -61,16 +63,6 @@ $register = function () {
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email">{{ __('Email') }}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text"><i class="fas fa-user-lock"></i></label>
-                        </div>
-                        <input type="text" id="email" wire:model.live.blur="form.email"  class="form-control @error('form.email') is-invalid @enderror" placeholder="Email ou Telemovel" autofocus>
-                        @error('form.email') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="phone">{{ __('Telemovel') }}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -78,6 +70,16 @@ $register = function () {
                         </div>
                         <input type="text" id="phone"  wire:model.live.blur="form.phone"  class="form-control @error('form.phone') is-invalid @enderror" placeholder="Telemovel">
                         @error('form.phone') <label class="invalid-feedback" role="alert">{{ $message }}</label> @enderror
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">{{ __('Email') }}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user-lock"></i></span>
+                        </div>
+                        <input type="email" id="email" wire:model.live.blur="form.email"  class="form-control @error('form.email') is-invalid @enderror" placeholder="Email">
+                        @error('form.email') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="form-group">

@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('faileds', function (Blueprint $table) {
             //CONSTRAINTS
             $table->foreignId('statistic_id')
+                ->primary()
                 ->constrained()
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
-                
-            $table->primary('statistic_id');
         });
     }
 

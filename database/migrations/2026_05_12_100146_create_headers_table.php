@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('headers', function (Blueprint $table) {
-            $table->id('id');
+            $table->increments('id');
             $table->string('description');
 
             //CONSTRAINTS
-            $table->foreignId('department_id')
-            ->constrained()
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->unsignedInteger('department_id')
+                ->foreign()
+                ->references('id')
+                ->on('departments')
+                ->onDelete('cascade');
         });
     }
 

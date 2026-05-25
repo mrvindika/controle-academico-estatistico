@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+
 use App\Models\User;
 use App\Traits\AppendTrait;
 use App\Traits\UserRules;
@@ -27,11 +28,10 @@ class UserForm extends Form
         $this->user= $user;
         $this->name= $user->name;
         $this->role= $user->role;
-        $this->email= $user->email;
-        $this->phone= $user->phone;
+        $this->email= $user->contact->email;
+        $this->phone= $user->contact->phone;
     }
 
-    
     public function rules(): array
     {
         return $this->getUserRules();

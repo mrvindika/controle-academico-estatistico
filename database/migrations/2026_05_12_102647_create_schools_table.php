@@ -12,19 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('schools', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('name');
             $table->string('license');
-            $table->string('code', 50);
+            $table->string('code', 100);
             $table->enum('type', 
                 ['Público', 'Público-privado', 'Privado'])->default('Público');
             $table->timestamps();
 
             //CONSTRAINTS
-            $table->foreignId('department_id')
-            ->constrained()
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->unsignedInteger('department_id')
+                ->foreign()
+                ->references('id')
+                ->on('departments')
+                ->onDelete('cascade');
         });
     }
 

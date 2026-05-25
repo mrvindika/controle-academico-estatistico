@@ -1,11 +1,10 @@
 <?php
 
 use App\Livewire\Forms\LoginForm;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use function Livewire\Volt\{form};
 
 form(LoginForm::class);
+
 
 $login = function () {
     $this->validate();
@@ -18,7 +17,6 @@ $login = function () {
 
     return $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
 };
-
 
 ?>
 
@@ -34,22 +32,22 @@ $login = function () {
         <div class="card-body">
             <form wire:submit="login">
                 <div class="form-group">
-                    <label for="email">{{ __('Usuário') }}</label>
+                    <label for="username">{{ __('Usuário') }}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user-lock"></i></span>
                         </div>
-                        <input type="text" id="email" wire:model="form.email"  class="form-control @error('form.email') is-invalid @enderror" placeholder="Email ou Telemovel" aria-label="Email ou Telemovel" autofocus>
-                        @error('form.email') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
+                        <input type="text" id="username" wire:model="form.username"  class="form-control @error('form.username') is-invalid @enderror" placeholder="Email ou Telemovel" autofocus>
+                        @error('form.username') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password">{{ __('Nova senha') }}</label>
+                    <label for="password">{{ __('Senha') }}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-eye-slash"></i></span>
                         </div>
-                        <input type="password" id="password"  wire:model.live.blur="form.password"  class="form-control @error('form.password') is-invalid @enderror" placeholder="Nova senha" aria-label="Nova senha">
+                        <input type="password" id="password"  wire:model="form.password"  class="form-control @error('form.password') is-invalid @enderror" placeholder="Senha">
                         @error('form.password') <span class="invalid-feedback" role="alert">{{ $message }}</span> @enderror
                     </div>
                 </div>

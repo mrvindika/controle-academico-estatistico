@@ -12,16 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('statistics', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('grade');
             $table->tinyInteger('both_genders')->default(0);
             $table->tinyInteger('female')->default(0);
 
             //CONSTRAINTS
             $table->foreignId('academic_period_id')
-            ->constrained()
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->constrained()
+                ->onDelete('cascade');
         });
     }
 

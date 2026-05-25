@@ -29,7 +29,7 @@
                                 <div class="input-group-prepend">
                                     <label for="file" class="input-group-text text-success"><i class="fa fa-file-excel"></i></label>
                                 </div>
-                                <input type="file" id="file"  wire:model="file" accept=".xlsx"  class="form-control" placeholder="Nome">
+                                <input type="file" id="file"  wire:model="file" accept=".xlsx,.xls,.xlsm,.csv"  class="form-control" placeholder="Nome">
                             </div>
                         </div>
                     </div>

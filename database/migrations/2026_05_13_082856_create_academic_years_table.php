@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('academic_years', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('name');
 
             //CONSTRAINTS
-            $table->foreignId('school_id')
-            ->constrained()
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->unsignedInteger('school_id')
+                ->foreign()
+                ->references('id')
+                ->on('schools')
+                ->onDelete('cascade');
         });
     }
 

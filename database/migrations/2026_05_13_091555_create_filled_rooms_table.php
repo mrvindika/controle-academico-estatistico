@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('filled_rooms', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->tinyInteger('built')->default(0);
             $table->tinyInteger('outdoor')->default(0);
         
             //CONSTRAINTS
-            $table->foreignId('statistic_id')
+            $table->foreignId('academic_period_id')
                 ->constrained()
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
     }
